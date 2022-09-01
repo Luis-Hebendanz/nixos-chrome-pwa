@@ -18,7 +18,7 @@ with lib;
       RestartSec = 0;
       ExecStart = "${pkgs.writeShellScript "${name}.sh" ''
         set -euo pipefail
-
+        PATH=${makeBinPath (with pkgs; [ coreutils findutils inotify-tools ])}
         places=( ~/.local/share/applications ~/.gnome/apps/ ~/Desktop/ )
 
         while true

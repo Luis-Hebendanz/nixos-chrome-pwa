@@ -1,5 +1,5 @@
 {
-  description = "NixOS VSCode server";
+  description = "NixOS Chrome PWA";
 
   outputs = { self, nixpkgs }: {
     nixosModule = import ./modules/vscode-server;

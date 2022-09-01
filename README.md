@@ -1,6 +1,6 @@
 # Visual Studio Code Server support in NixOS
 
-Experimental support for VS Code Server in NixOS. The NodeJS by default supplied by VS Code cannot be used within NixOS due to missing hardcoded paths, so it is automatically replaced by a symlink to a compatible version of NodeJS that does work under NixOS.
+Experimental support for Chrome PWA apps in NixOS. The chrome progressive web apps cannot be used within NixOS due to hardcoded paths in the .desktop file, so the files are beeing automatically edited to use relative paths.
 
 ## Installation
 
@@ -14,10 +14,10 @@ you'll have to manually enable the service for each user (see below).
 ```nix
 {
   imports = [
-    (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
+    (fetchTarball "https://github.com/Luis-Hebendanz/nixos-chrome-pwa/tarball/master")
   ];
 
-  services.vscode-server.enable = true;
+  services.chrome-pwa.enable = true;
 }
 ```
 
@@ -25,14 +25,14 @@ you'll have to manually enable the service for each user (see below).
 
 ```nix
 {
-  inputs.vscode-server.url = "github:msteen/nixos-vscode-server";
+  inputs.chrome-pwa.url = "github:luis-hebendanz/nixos-chrome-pwa";
 
-  outputs = { self, nixpkgs, vscode-server }: {
+  outputs = { self, nixpkgs, chrome-pwa }: {
     nixosConfigurations.yourhostname = nixpkgs.lib.nixosSystem {
       modules = [
-        vscode-server.nixosModule
+        chrome-pwa.nixosModule
         ({ config, pkgs, ... }: {
-          services.vscode-server.enable = true;
+          services.chrome-pwa.enable = true;
         })
       ];
     };
@@ -45,7 +45,7 @@ you'll have to manually enable the service for each user (see below).
 And then enable them for the relevant users:
 
 ```
-systemctl --user enable auto-fix-vscode-server.service
+systemctl --user enable auto-fix-chrome-pwa.service
 ```
 
 You will see the following message:
@@ -69,7 +69,7 @@ Possible reasons for having this kind of units are:
 However you can safely ignore it. The service will start automatically after reboot once enabled, or you can just start it immediately yourself with:
 
 ```
-systemctl --user start auto-fix-vscode-server.service
+systemctl --user start auto-fix-chrome-pwa.service
 ```
 
 ### Home Manager
@@ -79,36 +79,13 @@ Put this code into your [home-manager](https://github.com/nix-community/home-man
 ```nix
 {
   imports = [
-    "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
+    "${fetchTarball "https://github.com/Luis-Hebendanz/nixos-chrome-pwa/tarball/master"}/modules/chrome-pwa/home.nix"
   ];
 
-  services.vscode-server.enable = true;
+  services.chrome-pwa.enable = true;
 }
 ```
 
 ## Usage
 
 When the service is enabled and running it should simply work, there is nothing for you to do.
-
-## Troubleshooting
-
-This is not really an issue with this project per se, but with systemd user services in NixOS in general. After updating it can be necessary to first disable the service again:
-
-```
-systemctl --user disable auto-fix-vscode-server.service
-````
-
-This will remove the symlink to the old version. Then you can enable/start it again.
-
-### Connecting with SSH timed out
-
-If the remote SSH session fails to start with this error:
-
-> Failed to connect to the remote extension host server (Error: Connecting with SSH timed out)
-
-Try adding this to your VS Code settings json:
-```
-    "remote.SSH.useLocalServer": false,
-```
-
-Tested on VS Code version 1.63.2, connecting to the NixOS remote from a MacOS host.

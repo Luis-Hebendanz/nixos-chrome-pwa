@@ -23,11 +23,11 @@ with lib;
 
         while true
         do
-            result=$(inotifywait -e CREATE --include "\.desktop$" "${places[@]}")
+            result=$(inotifywait -e CREATE --include "\.desktop$" "''${places[@]}")
             file=$(echo "$result" | cut --field 3 --delimiter " ")
             echo "File: $file"
             sleep 0.2
-            for desk in "${places[@]}"; do
+            for desk in "''${places[@]}"; do
                 target="$desk/$file"
                 echo "Desk File: $target"
                 sed -i 's/Exec=.*\//Exec=/g' "$target"

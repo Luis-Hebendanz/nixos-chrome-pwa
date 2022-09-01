@@ -1,4 +1,4 @@
-# Visual Studio Code Server support in NixOS
+# Chrome Progressive Web App support in NixOS
 
 Experimental support for Chrome PWA apps in NixOS. The chrome progressive web apps cannot be used within NixOS due to hardcoded paths in the .desktop file, so the files are beeing automatically edited to use relative paths.
 

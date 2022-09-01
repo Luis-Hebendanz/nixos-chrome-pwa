@@ -4,7 +4,7 @@ moduleConfig:
 with lib;
 
 {
-  options.services.vscode-server.enable = with types; mkEnableOption "Chrome PWA";
+  options.services.chrome-pwa.enable = with types; mkEnableOption "Chrome PWA";
 
   config = lib.mkIf config.services.chrome-pwa.enable (moduleConfig rec {
     name = "auto-fix-chrome-pwa";
